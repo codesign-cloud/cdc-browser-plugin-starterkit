@@ -1,0 +1,41 @@
+{
+    "name": "preact-tailwind-starterkit",
+    "version": "1.0.0",
+    "description": "A starter kit with Preact and Tailwind CSS for Firefox, Chrome, and Edge",
+    "main": "index.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "dev:firefox": "npm run build && node scripts/dev-setup.js firefox",
+        "dev:chrome": "npm run build && node scripts/dev-setup.js chrome",
+        "dev:edge": "npm run build && node scripts/dev-setup.js edge",
+        "release:firefox": "node scripts/release-browser.js firefox",
+        "release:chrome": "node scripts/release-browser.js chrome",
+        "release:edge": "node scripts/release-browser.js edge",
+        "release:all": "npm run release:firefox && npm run release:chrome && npm run release:edge"
+    },
+    "keywords": [
+        "preact",
+        "tailwind",
+        "starter",
+        "firefox",
+        "chrome",
+        "edge",
+        "typescript"
+    ],
+    "author": "StarterKit Developer",
+    "license": "MIT",
+    "dependencies": {
+        "preact": "^10.27.0"
+    },
+    "devDependencies": {
+        "@preact/preset-vite": "^2.10.2",
+        "@types/node": "^20.19.9",
+        "autoprefixer": "^10.4.21",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^3.4.17",
+        "typescript": "^5.9.2",
+        "vite": "^5.4.19"
+    }
+}

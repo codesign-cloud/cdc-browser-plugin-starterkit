@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Preact Tailwind Starter"
+    },
+    "minimum_chrome_version": "60.0",
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    }
+}

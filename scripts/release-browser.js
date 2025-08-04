@@ -3,73 +3,41 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { mergeConfigs } = require('./merge-config');
+const {
+    validateBrowser,
+    ensureDistDirectory,
+    ensureDirectoryExists,
+    createManifest,
+    createPlaceholderIcons
+} = require('./shared-utils');
 
-// Get browser argument
-const browser = process.argv[2];
-
-// Validate browser argument
-if (!browser) {
-    console.error('Please specify a browser: firefox, chrome, or edge');
-    process.exit(1);
-}
-
-const supportedBrowsers = ['firefox', 'chrome', 'edge', 'tor'];
-if (!supportedBrowsers.includes(browser)) {
-    console.error(`Unsupported browser: ${browser}. Supported browsers: ${supportedBrowsers.join(', ')}`);
-    process.exit(1);
-}
+// Get and validate browser argument
+const browser = validateBrowser(process.argv[2]);
 
 console.log(`Creating release package for ${browser}...`);
 
 try {
     // Check if dist directory exists, if not build the project
-    const distDir = path.join(__dirname, '..', 'dist');
-    if (!fs.existsSync(distDir)) {
-        console.log('Dist directory not found. Building project...');
-        execSync('npm run build', { stdio: 'inherit' });
-    } else {
-        console.log('Using existing dist directory');
-    }
+    const distDir = ensureDistDirectory(true);
 
     // Create release directory if it doesn't exist
     const releaseDir = path.join(__dirname, '..', 'release');
-    if (!fs.existsSync(releaseDir)) {
-        fs.mkdirSync(releaseDir);
-    }
+    ensureDirectoryExists(releaseDir);
 
     // Create browser-specific release directory
     const browserReleaseDir = path.join(releaseDir, browser);
-    if (!fs.existsSync(browserReleaseDir)) {
-        fs.mkdirSync(browserReleaseDir);
-    }
+    ensureDirectoryExists(browserReleaseDir);
 
     // Copy dist contents to browser release directory
     console.log(`Copying files to ${browser} release directory...`);
     execSync(`xcopy /E /I /Y "${distDir}" "${browserReleaseDir}"`, { stdio: 'inherit' });
 
-    // Merge configs and create manifest.json for the browser
-    console.log(`Creating ${browser} manifest...`);
-    const manifest = mergeConfigs(browser);
-    fs.writeFileSync(path.join(browserReleaseDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
-
-    // Create icons directory if it doesn't exist
-    const iconsDir = path.join(browserReleaseDir, 'icons');
-    if (!fs.existsSync(iconsDir)) {
-        fs.mkdirSync(iconsDir);
-    }
+    // Create manifest.json for the browser
+    createManifest(browser, browserReleaseDir);
 
     // Create placeholder icons if they don't exist
-    const iconSizes = [16, 48, 128];
-    iconSizes.forEach(size => {
-        const iconPath = path.join(iconsDir, `icon${size}.png`);
-        if (!fs.existsSync(iconPath)) {
-            console.log(`Creating placeholder icon ${size}x${size}...`);
-            // Create a simple PNG file (this is just a placeholder)
-            const placeholderIcon = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfkBhAWFhYWFhYWDZCqAAAAjUlEQVRIx7WVwQ3AIAwDbcT+IzN0kR6KHJwqKiIlfmAnCQD8n6w1J8QYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wx9i4P3wATwWFjTyoAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDgtMDRUMjA6MjA6MTcrMDA6MDAmqXYPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA4LTA0VDIwOjIwOjE3KzAwOjAwFOrIjgAAAABJRU5ErkJggg==', 'base64');
-            fs.writeFileSync(iconPath, placeholderIcon);
-        }
-    });
+    const iconsDir = path.join(browserReleaseDir, 'icons');
+    createPlaceholderIcons(iconsDir);
 
     // Create zip package
     const packageName = `preact-tailwind-starterkit.${browser}.zip`;

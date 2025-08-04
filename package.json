@@ -10,10 +10,12 @@
         "dev:firefox": "npm run build && node scripts/dev-setup.js firefox",
         "dev:chrome": "npm run build && node scripts/dev-setup.js chrome",
         "dev:edge": "npm run build && node scripts/dev-setup.js edge",
+        "dev:tor": "npm run build && node scripts/dev-setup.js tor",
         "release:firefox": "node scripts/release-browser.js firefox",
         "release:chrome": "node scripts/release-browser.js chrome",
         "release:edge": "node scripts/release-browser.js edge",
-        "release:all": "npm run release:firefox && npm run release:chrome && npm run release:edge"
+        "release:tor": "node scripts/release-browser.js tor",
+        "release:all": "npm run release:firefox && npm run release:chrome && npm run release:edge && npm run release:tor"
     },
     "keywords": [
         "preact",

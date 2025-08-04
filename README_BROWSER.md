@@ -1,6 +1,6 @@
 # Browser Setup Guide
 
-This guide explains how to run the Preact + Tailwind CSS starter kit as a browser extension/plugin in Firefox, Chrome, Edge, and Opera for both development and production modes.
+This guide explains how to run the Preact + Tailwind CSS starter kit as a browser extension/plugin in Firefox, Chrome, Edge, Tor Browser, and Opera for both development and production modes.
 
 ## Table of Contents
 
@@ -13,6 +13,9 @@ This guide explains how to run the Preact + Tailwind CSS starter kit as a browse
 - [Edge](#edge)
   - [Development Mode](#edge-development-mode)
   - [Production Mode](#edge-production-mode)
+- [Tor Browser](#tor-browser)
+  - [Development Mode](#tor-browser-development-mode)
+  - [Production Mode](#tor-browser-production-mode)
 - [Opera](#opera)
 
 ## Firefox
@@ -145,6 +148,58 @@ This guide explains how to run the Preact + Tailwind CSS starter kit as a browse
 
 3. **For Microsoft Edge Add-ons store submission**:
    - Upload the `.zip` file to the [Microsoft Edge Add-ons Developer Dashboard](https://partner.microsoft.com/dashboard/microsoftedge/).
+
+## Tor Browser
+
+**Tor Browser Compatibility**: Tor Browser is based on Firefox but has stricter security policies and content security requirements.
+
+### Tor Browser Development Mode
+
+1. **Prepare the extension for Tor Browser**:
+
+   ```bash
+   npm run dev:tor
+   ```
+
+   This will build the project and create a Tor Browser-compatible `manifest.json` with stricter security policies in the `dist/` directory.
+
+2. **Open Tor Browser** and navigate to `about:debugging#/runtime/this-firefox`.
+
+3. Click on **"Load Temporary Add-on..."**.
+
+4. Navigate to your project's `dist/` directory and select the `manifest.json` file.
+
+5. The extension will be loaded temporarily.
+
+**Important Notes for Tor Browser**:
+
+- Tor Browser has stricter Content Security Policy (CSP) - no `'unsafe-eval'` allowed
+- Some permissions may be restricted for privacy reasons
+- Extensions should not compromise user anonymity
+- Test thoroughly as Tor Browser may block certain extension behaviors
+
+**Hot Reload**: To see changes, rebuild with `npm run dev:tor` and click "Reload" next to your extension in the debugging page.
+
+### Tor Browser Production Mode
+
+1. **Create the production package**:
+
+   ```bash
+   npm run release:tor
+   ```
+
+   This creates a Tor Browser-compatible extension package in the `release/` directory as `preact-tailwind-starterkit.tor.zip`.
+
+2. **Install the extension for testing**:
+   - Open Tor Browser and navigate to `about:addons`.
+   - Click the gear icon and select "Install Add-on From File...".
+   - Select the `.zip` file from the `release/` directory.
+   - Confirm the installation.
+
+3. **Distribution**:
+   - Tor Browser users typically install extensions manually
+   - Consider providing installation instructions for privacy-conscious users
+   - Extensions should be distributed through secure channels
 
 ## Opera
 

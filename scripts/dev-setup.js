@@ -13,7 +13,7 @@ if (!browser) {
     process.exit(1);
 }
 
-const supportedBrowsers = ['firefox', 'chrome', 'edge'];
+const supportedBrowsers = ['firefox', 'chrome', 'edge', 'tor'];
 if (!supportedBrowsers.includes(browser)) {
     console.error(`Unsupported browser: ${browser}. Supported browsers: ${supportedBrowsers.join(', ')}`);
     process.exit(1);
